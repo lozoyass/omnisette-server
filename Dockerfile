@@ -1,6 +1,10 @@
 FROM rust:slim-buster AS builder
 
-RUN apt-get update && apt-get install --no-install-recommends -y perl make && \
+RUN sed -i '/buster-updates/d' /etc/apt/sources.list && \
+    sed -i 's|http://deb.debian.org|http://archive.debian.org|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.debian.org|http://archive.debian.org|g' /etc/apt/sources.list && \
+    echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until && \
+    apt-get update && apt-get install --no-install-recommends -y perl make && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
